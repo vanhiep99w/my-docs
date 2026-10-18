@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check shared exact versions in child manifests and npm lockfiles, without network/writes."""
+"""Check shared dependency declarations and exact npm resolutions, without network/writes."""
 
 import configparser
 import json
@@ -8,7 +8,15 @@ import sys
 
 
 SECTIONS = ("dependencies", "devDependencies")
-SITE_PACKAGES = ("next", "react", "react-dom", "fumadocs-core", "fumadocs-ui", "fumadocs-mdx")
+DOCS_KIT = "@vanhiep99w/docs-kit"
+SITE_PACKAGES = ("next", "react", "react-dom", "fumadocs-core", "fumadocs-ui", "fumadocs-mdx", DOCS_KIT)
+# Only sites already integrated with docs-kit; do not add it to unrelated sites.
+DOCS_KIT_SITES = frozenset({
+    "angular-learn", "elk-learn", "graphql-learn", "interview-question",
+    "java-learn", "jenkins-learn", "jmm", "js-learn", "k8s-learn",
+    "kafka-learn", "micro-frontend-learn", "microservice-learn", "multi-tenant",
+    "react-learn", "redis-learn", "sql", "system-design-practice",
+})
 
 
 def check_package(path: Path, versions: dict[str, str]) -> list[str]:
@@ -22,6 +30,8 @@ def check_package(path: Path, versions: dict[str, str]) -> list[str]:
     dependencies = {key: value for section in SECTIONS for key, value in manifest.get(section, {}).items()}
     if "next" in dependencies:
         for name in SITE_PACKAGES:
+            if name == DOCS_KIT and path.name not in DOCS_KIT_SITES:
+                continue
             if name not in dependencies:
                 errors.append(f"{path.name}: missing {name}")
     for section in SECTIONS:
@@ -31,8 +41,13 @@ def check_package(path: Path, versions: dict[str, str]) -> list[str]:
             target = versions[name]
             alias = name == "fumadocs-ui" and spec.startswith("npm:@fumadocs/base-ui@")
             expected = f"npm:@fumadocs/base-ui@{target}" if alias else target
-            if spec != expected:
-                errors.append(f"{path.name}: {name} must be {expected}, found {spec}")
+            accepted = {expected}
+            # Preserve the existing consumers' caret declarations; their lockfile
+            # must still resolve the exact shared version below.
+            if name == DOCS_KIT:
+                accepted.add(f"^{target}")
+            if spec not in accepted:
+                errors.append(f"{path.name}: {name} must be {' or '.join(sorted(accepted))}, found {spec}")
             if locked_manifest.get(section, {}).get(name) != spec:
                 errors.append(f"{path.name}: lockfile manifest differs for {name}")
             installed = lock.get(f"node_modules/{name}", {})

@@ -59,6 +59,33 @@ class StackTests(unittest.TestCase):
         del self.manifest["dependencies"]["fumadocs-mdx"]
         self.assertTrue(any("missing fumadocs-mdx" in error for error in self.check()))
 
+    def test_requires_docs_kit_for_integrated_sites(self):
+        self.path = self.path / "angular-learn"
+        self.path.mkdir()
+        del self.manifest["dependencies"][stack.DOCS_KIT]
+        self.assertTrue(any(f"missing {stack.DOCS_KIT}" in error for error in self.check()))
+
+    def test_non_consumers_do_not_require_docs_kit(self):
+        del self.manifest["dependencies"][stack.DOCS_KIT]
+        del self.lock["packages"][""]["dependencies"][stack.DOCS_KIT]
+        parent = self.path
+        for site in ("aws-learn", "docker-learn", "jwt-learn"):
+            with self.subTest(site=site):
+                self.path = parent / site
+                self.path.mkdir()
+                self.assertEqual(self.check(), [])
+
+    def test_preserves_current_docs_kit_caret_spec(self):
+        self.manifest["dependencies"][stack.DOCS_KIT] = "^1.2.3"
+        self.lock["packages"][""]["dependencies"][stack.DOCS_KIT] = "^1.2.3"
+        self.assertEqual(self.check(), [])
+
+    def test_docs_kit_caret_cannot_hide_stale_lock(self):
+        self.manifest["dependencies"][stack.DOCS_KIT] = "^1.2.3"
+        self.lock["packages"][""]["dependencies"][stack.DOCS_KIT] = "^1.2.3"
+        self.lock["packages"][f"node_modules/{stack.DOCS_KIT}"]["version"] = "1.2.2"
+        self.assertTrue(any(f"locked {stack.DOCS_KIT}" in error for error in self.check()))
+
     def test_library_dev_dependencies_without_next(self):
         self.manifest = {"devDependencies": {"react": "1.2.3"}, "peerDependencies": {"react": "^18 || ^19"}}
         self.lock["packages"][""] = {"devDependencies": {"react": "1.2.3"}}
