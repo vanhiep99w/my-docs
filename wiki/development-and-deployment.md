@@ -51,7 +51,9 @@ Chạy sau `npm ci`, với browser/network nếu test yêu cầu. Lệnh tương
 | Repo / loại thay đổi | Lệnh có trong manifest và precondition |
 |---|---|
 | `docs` | Không npm tests; HTML/filter/link/browser checks ở [landing](landing-and-authoring-tools.md#thay-doi-portal) |
-| `angular-learn`, `elk-learn`, `graphql-learn`, `react-learn`, `jwt-learn`, `aws-learn` | Có build, không thấy npm test script; review output/route/MDX bằng browser. AWS API cần validation riêng, build chưa đủ |
+| `elk-learn`, `graphql-learn`, `react-learn`, `jwt-learn` | Build + review output/route/MDX bằng browser |
+| `angular-learn` | `npm test`, build; D2/content checks có trong test script |
+| `aws-learn` | `npm test` (MDX alerts/Mermaid/SSH highlighting), build + browser smoke. API/D1 cần validation riêng, build chưa đủ |
 | `docker-learn` | `npm run types:check`, `npm run lint`, `npm run build`; không test script |
 | `github-actions-learn` | `npm run types:check`, `npm run lint`, `npm run build` |
 | `mongodb-learn` | `npm run types:check`, `npm run lint`, `npm run build` |

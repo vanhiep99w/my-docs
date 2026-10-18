@@ -60,34 +60,34 @@ Tên folder, tên package, Wrangler project và hostname không luôn trùng: `j
 
 ## Phien-ban-va-consumers
 
-Ý định stack chung là Fumadocs + Next.js + React hiện đại. **Manifest chưa đồng nhất và “mới nhất” không phải một invariant đã được kiểm tra.** Bảng là declaration trong package.json, không phải version resolved trong lockfile/node_modules, cũng không xác nhận npm latest hoặc website live.
+Các publishing site pin cùng bộ stable trong manifest và npm lockfile. Policy tại [`../stack-versions.json`](../stack-versions.json), kiểm tra offline bằng `python3 scripts/check-stack.py` từ collection root. “Latest” chỉ đúng tại lần kiểm tra registry/nâng version, không phải tự động cập nhật hay xác nhận website live.
 
 | Repo | Next | React | Fumadocs core / MDX | docs-kit |
 |---|---|---|---|---|
-| `angular-learn` | `^16.3.4` | `^19.3.0` | `^16.15.9` / `^15.4.0` | — |
-| `aws-learn` | `^15.2.4` | `^19.0.0` | `^14.5.6` / `^11.1.3` | — |
-| `docker-learn` | `16.2.10` | `^19.2.7` | `16.11.5` / `15.2.0` | — |
-| `elk-learn` | `^16.3.0` | `^19.2.0` | `^16.14.0` / `^15.2.2` | — |
-| `github-actions-learn` | `16.2.11` | `19.2.8` | `16.11.5` / `15.2.0` | — |
-| `graphql-learn` | `16.3.3` | `19.2.8` | `16.15.4` / `15.4.0` | — |
-| `interview-question` | `^16.2.11` | `^19.2.8` | `^16.12.1` / `^15.2.0` | `^0.9.0` |
-| `java-learn` | `^16.2.11` | `^19.2.8` | `^16.12.0` / `^15.2.0` | `^0.5.0` |
-| `jenkins-learn` | `16.2.11` | `19.2.8` | `16.11.5` / `15.2.0` | `0.9.0` |
-| `jmm` | `^16.2.11` | `^19.2.8` | `^16.12.1` / `^15.2.0` | `^0.9.0` |
-| `js-learn` | `^16.2.12` | `^19.2.8` | `^16.12.1` / `^15.2.0` | — |
-| `jwt-learn` | `^16.2.11` | `^19.2.8` | `^16.12.1` / `^15.2.0` | — |
-| `k8s-learn` | `^16.2.10` | `^19.2.7` | `^16.11.5` / `^15.2.0` | `^0.9.0` |
-| `kafka-learn` | `^16.2.12` | `^19.2.8` | `^16.12.1` / `^15.2.0` | `^0.9.0` |
-| `micro-frontend-learn` | `^16.4.0` | `^19.2.0` | `16.17.1` / `15.4.7` | `0.5.0` |
-| `microservice-learn` | `16.3.0` | `19.2.8` | `16.14.0` / `15.2.2` | `^0.9.0` |
-| `mongodb-learn` | `16.3.0` | `^19.2.8` | `16.14.3` / `15.2.3` | — |
-| `multi-tenant` | `^16.2.12` | `^19.2.8` | `^16.12.1` / `^15.2.0` | `^0.9.0` |
-| `otel-learn` | `16.2.12` | `19.2.8` | `16.13.0` / `15.2.0` | — |
-| `react-learn` | `^16.2.11` | `^19.2.8` | `^16.12.1` / `^15.2.0` | — |
-| `redis-learn` | `^16.2.11` | `^19.2.8` | `^16.12.1` / `^15.2.0` | `^0.9.0` |
-| `rxjs-learn` | `16.3.8` | `19.3.0` | `16.16.0` / `15.4.6` | — |
-| `sql` | `^16.2.11` | `^19.2.8` | `^16.12.1` / `^15.2.0` | `0.5.0` |
-| `system-design-practice` | `^16.2.12` | `^19.2.8` | `^16.12.1` / `^15.2.0` | `^0.9.0` |
+| `angular-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | `0.2.0` |
+| `aws-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | — |
+| `docker-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | — |
+| `elk-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | — |
+| `github-actions-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | — |
+| `graphql-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | — |
+| `interview-question` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | `^0.9.0` |
+| `java-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | `^0.5.0` |
+| `jenkins-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | `0.9.0` |
+| `jmm` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | `^0.9.0` |
+| `js-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | — |
+| `jwt-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | — |
+| `k8s-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | `^0.9.0` |
+| `kafka-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | `^0.9.0` |
+| `micro-frontend-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | `0.5.0` |
+| `microservice-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | `^0.9.0` |
+| `mongodb-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | — |
+| `multi-tenant` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | `^0.9.0` |
+| `otel-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | — |
+| `react-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | — |
+| `redis-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | `^0.9.0` |
+| `rxjs-learn` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | — |
+| `sql` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | `0.5.0` |
+| `system-design-practice` | `16.4.2` | `19.3.1` | `16.17.5` / `15.4.7` | `^0.9.0` |
 
 `fumadocs-ui` là npm alias sang `@fumadocs/base-ui` tại Docker, GitHub Actions, Jenkins, MongoDB và OpenTelemetry; các site khác khai báo `fumadocs-ui` trực tiếp. Cùng import string không có nghĩa cùng implementation/version. Thay registry/components/layout cần đọc API của version consumer, không copy nguyên setup từ site khác.
 

@@ -41,6 +41,28 @@ python3 -m unittest discover -s tests -v
 
 Nếu root push bị từ chối do có commit mới từ người khác, đồng bộ root bằng Git theo quy trình của nhóm, xử lý conflict rồi chạy script lại; không force-push. Chỉ đồng bộ source/pointers, không tự cài npm dependencies, build hay deploy mọi site. Repo con có thể có CI/deploy Git integration riêng khi nhận push.
 
+## Phiên bản stack chung
+
+Các site Next.js dùng cùng bản **stable**, pin chính xác trong `package.json` và `package-lock.json`:
+
+| Package | Version |
+|---|---|
+| Next.js / eslint-config-next (nếu có) | `16.4.2` |
+| React / React DOM | `19.3.1` |
+| Fumadocs core / UI / base-ui | `16.17.5` |
+| Fumadocs MDX | `15.4.7` |
+| @types/react / @types/react-dom | `19.3.0` |
+
+Nguồn policy là [`stack-versions.json`](stack-versions.json). Kiểm tra offline sau khi init submodules:
+
+```bash
+python3 scripts/check-stack.py
+```
+
+Checker không cài package hoặc tự sửa repo. Khi nâng tiếp: xác minh `npm view <package>@latest version peerDependencies engines`, cập nhật policy + manifests + lockfiles ở các repo có dependency đó, giữ nguyên biến thể UI (Radix hoặc alias `@fumadocs/base-ui`), rồi chạy focused checks/build từng repo. Không dùng canary/RC hay `--force`/`--legacy-peer-deps` để bỏ qua incompatibility. Commit/push con trước và sync root theo quy trình bên trên.
+
+`docs/` là HTML tĩnh nên không có stack npm. `docs-kit/` chỉ đồng bộ React/type packages trong devDependencies; giữ nguyên peer range cho consumers, không thêm Next/Fumadocs vào thư viện. Các app ví dụ/lab lồng trong site không thuộc publishing stack này.
+
 ## Skill và Wiki
 
 - `.agents/skills/fumadocs-project-init/SKILL.md`: khởi tạo site và curriculum.

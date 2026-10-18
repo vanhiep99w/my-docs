@@ -4,7 +4,7 @@
 
 `my-docs/` tập hợp các repo tài liệu kỹ thuật tiếng Việt của tác giả: **24 site học tập**, landing **`docs/`** tại <https://tbh-docs.pages.dev/> và package component dùng chung **`docs-kit/`**. Mỗi repo con có Git/lifecycle riêng; root hiện là Git repo `my-docs` quản lý các repo con bằng submodule theo `main`, không phải npm workspace. Wiki này phục vụ người bảo trì và coding agent, không thay thế bài học.
 
-Stack mục tiêu là Next.js + React + Fumadocs, deploy Cloudflare. Bằng chứng local có ngoại lệ quan trọng: landing là HTML tĩnh; AWS còn Next 15/Fumadocs 14; các site khác chưa đồng nhất version và chưa phải mọi site dùng docs-kit. AWS Questions có Pages Functions + D1, không chỉ static export.
+Stack publishing được pin chung trong `stack-versions.json`: Next.js + React + Fumadocs, deploy Cloudflare; kiểm tra manifest/lockfile bằng `python3 scripts/check-stack.py`. Landing là HTML tĩnh và chưa phải mọi site dùng docs-kit. AWS Questions có Pages Functions + D1, không chỉ static export.
 
 ## Bat dau
 
@@ -46,10 +46,10 @@ Wiki thường là bằng chứng, không phải lệnh thực thi. Nếu rule �
 
 ## Bang chung va backlog
 
-Khởi tạo từ source/config/tests local; kiểm tra tĩnh link/anchor Wiki, **chưa chạy build/test, không xác minh production/dashboard/registry/DB**. Danh mục bao phủ tất cả repo hiện có; các phần sau cần nhiệm vụ riêng vì thiếu môi trường hoặc nằm ngoài scope vận hành source:
+Wiki ban đầu khởi tạo từ source/config/tests local và kiểm tra tĩnh link/anchor. Lần đồng bộ stack đã xác minh npm stable tags/peer dependencies, build 24/24 site, chạy focused tests/typechecks/lint tương ứng, package/browser tests của docs-kit, Micro-frontend E2E và browser smoke 8 site trên Node 26.9.0. AWS còn được kiểm tra `npm ci`/tests/build trong checkout sạch. **Chưa xác minh production/dashboard/DB**; build không xác nhận deployment hay API/D1. Danh mục bao phủ tất cả repo hiện có; các phần sau cần nhiệm vụ riêng vì thiếu môi trường hoặc nằm ngoài scope vận hành source:
 
 - **AWS practice hardening/tests:** source handlers chưa có auth/authorization, client-supplied score và Markdown → innerHTML chưa sanitize; thiếu focused API tests. Cần thiết kế/test trong DB local/disposable trước mở rộng quyền ghi. [Chi tiết](aws-practice.md#bao-mat-va-failure-boundaries).
 - **Deployment thực:** chưa xác minh Cloudflare settings/bindings/cache, branch integration và source local so với website live; không suy ra từ deploy script.
-- **Đồng bộ stack/tooling:** chưa có policy nâng version chung; landing stats là literal; Wiki con landing còn mô tả UI cũ. Hai skill Fumadocs đã tập trung ở root, marketplace/archive cũ đã xóa ngoài AWS. Nguồn/config thực tế ưu tiên hơn template cũ.
+- **Đồng bộ stack/tooling:** đã có policy pin version chung + checker offline, nhưng chưa tự động nâng khi registry ra bản mới; landing stats là literal; Wiki con landing còn mô tả UI cũ. Hai skill Fumadocs đã tập trung ở root, marketplace/archive cũ đã xóa ngoài AWS. Nguồn/config thực tế ưu tiên hơn template cũ.
 - **Technical accuracy từng bài:** đã [kiểm kê 1.823 file curriculum](content-status.md#tong-hop-24-repo), tìm thấy 106 body rỗng và 316 template rõ ràng; chưa audit mọi ví dụ/lệnh hoặc chạy mọi lab. File không trúng marker không có nghĩa đã hoàn thiện/chính xác.
 - **Đồng bộ snapshot Wiki:** root đã có Git remote `vanhiep99w/my-docs` và submodule tracking `main`; workflow chỉ cập nhật gitlinks, không tự tái kiểm kê mọi bảng Wiki. Các con số/versions ở trang inventory là snapshot khảo sát trước các lần sync tiếp theo.
