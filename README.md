@@ -52,7 +52,7 @@ Các site Next.js dùng cùng bản **stable**, pin chính xác trong `package.j
 | Fumadocs core / UI / base-ui | `16.17.5` |
 | Fumadocs MDX | `15.4.7` |
 | @types/react / @types/react-dom | `19.3.0` |
-| @vanhiep99w/docs-kit (17 site đang tích hợp) | `0.9.5` |
+| @vanhiep99w/docs-kit (17 site đang tích hợp) | `0.9.6` |
 
 Nguồn policy là [`stack-versions.json`](stack-versions.json). Kiểm tra offline sau khi init submodules:
 
@@ -60,7 +60,7 @@ Nguồn policy là [`stack-versions.json`](stack-versions.json). Kiểm tra offl
 python3 scripts/check-stack.py
 ```
 
-Checker yêu cầu docs-kit ở 17 site đã tích hợp (danh sách `DOCS_KIT_SITES` trong checker); không tự thêm package vào site chưa dùng. Manifest khai báo `0.9.5` hoặc `^0.9.5`, lockfile phải resolve đúng `0.9.5`.
+Checker yêu cầu docs-kit ở 17 site đã tích hợp (danh sách `DOCS_KIT_SITES` trong checker); không tự thêm package vào site chưa dùng. Manifest khai báo `0.9.6` hoặc `^0.9.6`, lockfile phải resolve đúng `0.9.6`.
 
 Checker không cài package hoặc tự sửa repo. Khi nâng tiếp: xác minh `npm view <package>@latest version peerDependencies engines`, cập nhật policy + manifests + lockfiles ở các repo có dependency đó, giữ nguyên biến thể UI (Radix hoặc alias `@fumadocs/base-ui`), rồi chạy focused checks/build từng repo. Không dùng canary/RC hay `--force`/`--legacy-peer-deps` để bỏ qua incompatibility. Commit/push con trước và sync root theo quy trình bên trên.
 
