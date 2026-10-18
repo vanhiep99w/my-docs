@@ -6,6 +6,7 @@ Use this guide after selecting a feature in the skill's decision table. Read onl
 
 - [Integration contract](#integration-contract)
 - [D2 diagrams and progressive views](#d2-diagrams-and-progressive-views)
+  - [Icons from the D2 catalog](#icons-from-the-d2-catalog)
 - [Code walkthrough versus diff](#code-walkthrough-versus-diff)
 - [Terminal sessions](#terminal-sessions)
 - [HTTP protocol exchanges](#http-protocol-exchanges)
@@ -90,6 +91,29 @@ steps: {
 Non-static modes emit `D2InteractiveDiagram`; register it alongside `D2Diagram` and keep the shared D2 CSS. The compiler/WASM runs at build time, never in the browser. Defaults use ELK; layout resolution is fence `layout` > page `d2Layout` > plugin option > ELK. If using page overrides, the host schema must retain `d2Layout`. Local images/imports/fonts and asset roots are host build configuration, not arbitrary paths for document authors to guess.
 
 Canonical details: `docs-kit/docs/d2.md`, `docs-kit/README.md`, `docs-kit/examples/d2/`. Do not hide a large unreadable graph by shrinking the font; split it or choose purposeful layers/scenarios.
+
+### Icons from the D2 catalog
+
+Use https://icons.d2lang.com/ whenever an accurate icon helps the reader recognize a technology or service. Browse/search the catalog and verify the exact asset exists; do not construct a likely-looking path. Keep generic concepts unbranded and preserve text labels. For example, use the Redis icon for an actual Redis cache, not for every cache or database:
+
+````mdx
+```d2 title="API reads from a Redis cache"
+direction: right
+api: API
+cache: Redis cache {
+  icon: https://icons.d2lang.com/dev/redis.svg
+}
+api -> cache: Lookup
+```
+````
+
+The URL above identifies the catalog asset; it does **not** prove the host embeds it. Before publishing:
+
+1. Reuse an existing vetted copy/mapping where available. Otherwise verify the SVG/image, applicable license/attribution and the host's asset policy. Do not inline unreviewed SVG with scripts, event handlers or unexpected external resources.
+2. Follow the host's vendoring convention, recording the source URL and checksum where required. Use its existing URL-rewrite plugin if authored catalog URLs are mapped to local assets.
+3. For direct local D2 icons, configure an approved `assetsRoot` and use a path relative to the authored MD/MDX file, not the collection root or this skill. Keep roots small, inside the host cwd and free of symlinks. Verify options against the installed package and `docs-kit/docs/d2.md`.
+4. Do not assume remote URLs are fetched, cached or embedded: docs-kit leaves them remote unless the host handles them. Prefer build-time embedding so exported pages do not require the catalog at reading time. Add missing integration only when in scope; otherwise report the external dependency or blocker.
+5. Inspect exported light/dark diagrams, narrow screens and no-JavaScript views. When embedding is intended, confirm the resulting SVG contains the asset and does not fetch it remotely. Do not change renderer defaults or force icons onto every node just to add a logo.
 
 ## Code walkthrough versus diff
 

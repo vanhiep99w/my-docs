@@ -18,7 +18,7 @@ Inspect `../../../docs-kit/package.json`, its README and the host's **installed*
 ## Workflow
 
 1. **Locate the canonical source and doc type.** Identify the reader's problem, prerequisites and desired outcome. Read only the relevant template in `references/doc-structures.md`.
-2. **Plan explanations and visuals together.** For each visual, name the question it answers and select from the decision table below. Introduce it in prose, then explain the decisive behavior afterward.
+2. **Plan explanations and visuals together.** For each visual, name the question it answers and select from the decision table below. Use matching icons from https://icons.d2lang.com/ whenever they accurately identify a depicted technology/service and make the diagram easier to understand. Introduce the visual in prose, then explain the decisive behavior afterward.
 3. **Verify integration before authoring.** A docs-kit fence needs its remark plugin, emitted component in the host MDX map and corresponding CSS. Source Explorer additionally needs provider, manifest/assets and build-time reference validation. Read the needed section of `references/docs-kit-components.md`; do not guess schemas or imports.
 4. **Write the actual file.** Match `.md`/`.mdx` and the host's frontmatter/heading conventions; preserve page identity, links and `meta.json` ordering. Keep technical names/code accurate and follow the voice/readability rules below.
 5. **Validate the selected features.** Run focused descriptor/MDX checks, the host's build when permitted, and inspect export/browser behavior relevant to the change. Check light/dark, narrow screens, no-JavaScript readability and copy/source links where applicable. Report checks actually run and remaining limitations; never deploy merely to validate prose.
@@ -42,6 +42,13 @@ If docs-kit or the selected feature is missing, identify the minimum dependency/
 Use two components only for different questions: D2 for the service interaction and ProtocolExchange for its HTTP details; CodeDiff for the change and TerminalSession for verifying it; D2 for the logical flow and SpanWaterfall for a genuinely timed trace. Do not repeat the same explanation in multiple viewers.
 
 For RxJS timing/lifecycle lessons, use truthful D2 flow/step views for subscription and cancellation relationships, plus a frame/event table and executable `TestScheduler` examples when exact timing matters. Do not fabricate a docs-kit marble renderer, draw hand-aligned marble diagrams or pretend a latency waterfall reproduces operator semantics.
+
+## D2 icons: use whenever appropriate
+
+- Use the catalog at https://icons.d2lang.com/ when writing or revising D2 diagrams. Choose recognizable product/service icons whenever they clarify component identity; do not restrict this to a particular vendor or repository.
+- Match the icon to the actual component, not just a related ecosystem. Do not assign a vendor logo to a generic API, database or abstract concept, or imply a dependency the article does not have. Omit an icon when no accurate, useful match exists.
+- Keep explicit text labels and meaningful arrows; icons supplement the explanation, never replace it. Use consistent treatment for repeated components and check light/dark and small-screen readability.
+- Verify the exact catalog asset URL instead of guessing filenames. Reuse the host's trusted local assets, URL-rewrite, checksum/attribution and build-time embedding conventions; do not assume docs-kit downloads remote icons automatically. Read the icon guidance in `references/docs-kit-components.md` before adding a new asset or changing asset configuration.
 
 ## Authoring and safety invariants
 
