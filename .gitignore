@@ -1,0 +1,24 @@
+# Generated application artifacts belong to child repositories, never this root.
+node_modules/
+.next/
+out/
+dist/
+.source/
+.wrangler/
+__pycache__/
+*.py[cod]
+
+# Local credentials, agent state and payload/session logs.
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.log
+.pi/
+.claude/
+.codex/
+.opencode/
+.crush/
+.DS_Store

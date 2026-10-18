@@ -1,0 +1,129 @@
+[submodule "angular-learn"]
+	path = angular-learn
+	url = https://github.com/vanhiep99w/angular-learn.git
+	branch = main
+
+[submodule "aws-learn"]
+	path = aws-learn
+	url = https://github.com/vanhiep99w/aws-learn.git
+	branch = main
+
+[submodule "docker-learn"]
+	path = docker-learn
+	url = https://github.com/vanhiep99w/docker-learn.git
+	branch = main
+
+[submodule "docs"]
+	path = docs
+	url = https://github.com/vanhiep99w/docs.git
+	branch = main
+
+[submodule "docs-kit"]
+	path = docs-kit
+	url = https://github.com/vanhiep99w/docs-kit.git
+	branch = main
+
+[submodule "elk-learn"]
+	path = elk-learn
+	url = https://github.com/vanhiep99w/elk-learn.git
+	branch = main
+
+[submodule "github-actions-learn"]
+	path = github-actions-learn
+	url = https://github.com/vanhiep99w/github-actions-learn.git
+	branch = main
+
+[submodule "graphql-learn"]
+	path = graphql-learn
+	url = https://github.com/vanhiep99w/graphql-learn.git
+	branch = main
+
+[submodule "interview-question"]
+	path = interview-question
+	url = https://github.com/vanhiep99w/interview-question.git
+	branch = main
+
+[submodule "java-learn"]
+	path = java-learn
+	url = https://github.com/vanhiep99w/java-learn.git
+	branch = main
+
+[submodule "jenkins-learn"]
+	path = jenkins-learn
+	url = https://github.com/vanhiep99w/jenkins-learn.git
+	branch = main
+
+[submodule "jmm"]
+	path = jmm
+	url = https://github.com/vanhiep99w/jmm.git
+	branch = main
+
+[submodule "js-learn"]
+	path = js-learn
+	url = https://github.com/vanhiep99w/js-learn.git
+	branch = main
+
+[submodule "jwt-learn"]
+	path = jwt-learn
+	url = https://github.com/vanhiep99w/jwt-learn.git
+	branch = main
+
+[submodule "k8s-learn"]
+	path = k8s-learn
+	url = https://github.com/vanhiep99w/k8s-learn.git
+	branch = main
+
+[submodule "kafka-learn"]
+	path = kafka-learn
+	url = https://github.com/vanhiep99w/kafka-learn.git
+	branch = main
+
+[submodule "micro-frontend-learn"]
+	path = micro-frontend-learn
+	url = https://github.com/vanhiep99w/micro-frontend-learn.git
+	branch = main
+
+[submodule "microservice-learn"]
+	path = microservice-learn
+	url = https://github.com/vanhiep99w/microservice-learn.git
+	branch = main
+
+[submodule "mongodb-learn"]
+	path = mongodb-learn
+	url = https://github.com/vanhiep99w/mongodb-learn.git
+	branch = main
+
+[submodule "multi-tenant"]
+	path = multi-tenant
+	url = https://github.com/vanhiep99w/multi-tenant.git
+	branch = main
+
+[submodule "otel-learn"]
+	path = otel-learn
+	url = https://github.com/vanhiep99w/otel-learn.git
+	branch = main
+
+[submodule "react-learn"]
+	path = react-learn
+	url = https://github.com/vanhiep99w/react-learn.git
+	branch = main
+
+[submodule "redis-learn"]
+	path = redis-learn
+	url = https://github.com/vanhiep99w/redis-learn.git
+	branch = main
+
+[submodule "rxjs-learn"]
+	path = rxjs-learn
+	url = https://github.com/vanhiep99w/rxjs-learn.git
+	branch = main
+
+[submodule "sql"]
+	path = sql
+	url = https://github.com/vanhiep99w/sql.git
+	branch = main
+
+[submodule "system-design-practice"]
+	path = system-design-practice
+	url = https://github.com/vanhiep99w/system-design-practice.git
+	branch = main
