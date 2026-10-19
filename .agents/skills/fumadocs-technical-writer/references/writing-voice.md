@@ -34,7 +34,7 @@ Some popular posts also lean on things this skill should *not* copy: invented fi
 
 **2. Pick a pronoun pair and hold it.** Default to *mình – bạn* (author speaks to reader). If the user's existing docs use *chúng ta*, *tôi*, or *tác giả*, match them. Never switch mid-doc, and keep the same choice across a series so parts feel like one voice. Use *mình* mainly for opinions and recommendations ("mình khuyên…"), not as decoration on every sentence.
 
-**3. Write reasoning as prose, enumerations as lists.** "Why X over Y" is an argument; bullets chop it into assertions with no connective tissue. Reserve bullets and tables for things that really are parallel (config options, steps, comparisons). Why: the human feel mostly comes from "vì… nên…", "nhưng…", "trừ khi…", and those words die in bullet form.
+**3. Write reasoning as prose, enumerations as lists.** Explain "why X over Y" as a connected argument, not disconnected assertions. Before a config snippet, establish the problem it solves; afterward, explain the important choice, its trade-off and when an alternative would fit better. Relate host/remote or before/after snippets explicitly instead of leaving readers to connect them. Reserve bullets/tables for parallel facts, ordered procedures and lookup material. Do not remove useful code or debugging tables just to make the page look more like a blog.
 
 **4. Anticipate questions.** Where a curious reader would stop and ask "ủa, thế thì…?", ask it for them and answer it. Use this as a seasoning, not a tic: once or twice per section at most.
 
@@ -54,10 +54,10 @@ Some popular posts also lean on things this skill should *not* copy: invented fi
 
 The doc is published under the user's name, so anything that sounds like lived experience must really be theirs.
 
-- **Do not invent personal anecdotes** ("năm 2018 mình làm ở một công ty e-commerce…", "mình từng setup cho hệ thống fintech…") or claims of years of experience.
+- **Do not add personal-experience stories to sound human.** Avoid unsupported claims such as "mình từng gặp lỗi này ở production", "theo kinh nghiệm của mình" or years of experience. Make the prose natural through reasoning, concrete examples and sentence rhythm, not a fabricated author biography. Use "mình" for an explained recommendation, not as evidence that the author has done it.
 - **Do not invent benchmarks, incident metrics, or customer stories.** Use numbers only when they are well-established facts (e.g. Redis Cluster has 16384 hash slots) or are clearly labelled as illustrative ("ví dụ: giả sử mỗi request mất 50 ms…"). If a real figure matters and you can't verify it, say what to measure instead.
 - **Scenarios are hypothetical, and say so**: "Hình dung một đợt flash sale…", "Giả sử bạn có một service…". That keeps the narrative energy without false claims.
-- **If the user supplies real experience** (an incident, a decision, a lesson), weave it in, in their voice. This is the best material a doc can have.
+- **Preserve user-supplied experience only when relevant to the requested edit.** Do not embellish it or turn another blog author's anecdote into the user's own story.
 
 ## Patterns that sound machine-written
 
@@ -99,6 +99,14 @@ Before:
 After:
 > AOF an toàn hơn vì ghi lại từng lệnh write, nhưng đổi lại file phình dần theo thời gian và restart lâu hơn do Redis phải "phát lại" toàn bộ. Nếu mất vài giây dữ liệu là không chấp nhận được (ví dụ đơn hàng), mình chọn AOF. Nếu Redis chỉ làm cache thì RDB là đủ, và nhẹ hơn nhiều.
 
+**Disconnected config notes → a reasoned choice**
+
+Before:
+> Shell dùng BrowserRouter. Vue dùng createMemoryHistory. Đồng bộ bằng onNavigate và updateLocation.
+
+After:
+> Nếu cả React Router và Vue Router đều ghi browser history, một lần chuyển trang có thể bị hai bên xử lý khác nhau. Vì vậy, ví dụ để shell giữ URL trên thanh địa chỉ, còn Vue dùng `createMemoryHistory()` cho các route bên trong. Khi người dùng bấm link trong Vue, remote gọi `onNavigate` để nhờ shell đổi URL; shell truyền location mới xuống qua `updateLocation`. Chạy Vue độc lập thì dùng `createWebHistory()`, vì lúc đó không có shell điều phối.
+
 **Warning**
 
 Before:
@@ -127,8 +135,8 @@ The voice stays recognisably the same, but how much of it shows depends on what 
 ## Self-check before saving
 
 1. Read the first paragraph. Does it start from a situation or question, or from a definition?
-2. Pick any section. Is there at least one "vì…", "nhưng…", or "trừ khi…" explaining reasoning, or is it only assertions?
+2. Read a section containing a technical choice or config. Can the reader tell what problem it solves, why this approach was chosen and when to choose differently? Rewrite isolated bullets/configs into a connected explanation; merely adding "vì" is not enough.
 3. Search for the machine-written phrases above and rewrite each hit.
-4. Look for invented anecdotes or unverifiable numbers. Remove or relabel them as hypothetical.
+4. Trace every personal-experience claim to material supplied by the user. Remove unsupported anecdotes and experience claims; use an explicitly hypothetical example if needed. Remove unverifiable numbers or label genuinely illustrative values.
 5. Is the pronoun pair consistent from top to bottom?
 6. Would the last paragraph survive being deleted? If it only repeats the doc, replace it with a concrete next step or cut it.

@@ -168,13 +168,13 @@ Accurate-but-flat docs get skimmed and dropped. Write the way a good senior engi
 
 - **Open with the reader's problem or a question they already have**, then introduce the concept as the answer. Don't open with a dictionary definition.
 - **Talk to one reader.** Default to *mình – bạn* in Vietnamese docs (match the user's existing docs if they use *chúng ta* / *tôi*), and keep the choice consistent across the doc and the series.
-- **Explain reasoning in prose** ("vì… nên…", "trừ khi…"). Keep bullets and tables for things that are truly parallel.
+- **Explain choices in connected prose**, not a sequence of bullets or isolated configs. Lead from the reader's problem to the chosen approach, show the decisive snippet, then explain why it fits, what it costs and when to choose differently. Keep bullets/tables for parallel facts, steps and lookup material; keep complete configs in validated source references when available.
 - **Take a stance**: say which option you'd pick by default and when you wouldn't use the thing at all. Name the common misunderstanding or trap.
 - **Prefer concrete over abstract**: a scenario, a command and its output, a worked example. Use one everyday analogy per hard concept, and say where it stops being true.
 - **Keep English technical terms as English** (cache, thread, failover, consumer group), the way Vietnamese engineers actually say them.
 - **Cut machine-sounding filler** ("Trong thế giới công nghệ ngày nay…", "đóng vai trò quan trọng", "Hãy cùng khám phá…", nominalised verbs like "thực hiện việc lưu trữ").
 
-Two guardrails matter because the doc is published under the user's name: never invent personal anecdotes ("mình từng làm ở…") or unverifiable benchmarks and metrics. Frame stories as hypothetical ("Hình dung một đợt flash sale…") and label illustrative numbers as such. If the user shares real experience, weave it in.
+Make the voice natural through clear reasoning, concrete examples and varied sentence rhythm — not by adding personal-experience stories ("mình từng làm ở…", "theo kinh nghiệm của mình…"). Do not invent anecdotes, credentials, benchmarks or incident metrics. Use clearly hypothetical scenarios instead; preserve the user's own experience only when supplied and relevant to the requested edit. Follow the examples and final self-check in `references/writing-voice.md`.
 
 Dial the voice to the doc type: fullest in explainers and design docs, lean in API reference tables (voice lives in the intro and gotcha callouts), and calm, short and joke-free in runbooks.
 
