@@ -26,18 +26,24 @@ git switch main
 # sửa, kiểm tra, commit và push trong repo con
 git push origin main
 cd ..
-python3 scripts/sync-repos.py --commit
+python3 scripts/sync-repos.py --repo redis-learn --commit
 git push origin main
 ```
 
-Script chỉ fast-forward checkout sạch tới `origin/main`; không commit nội dung repo con, không stash/reset/clean hoặc push hộ. Dừng nếu có uncommitted work, branch khác, commit chưa push/divergence hay operation Git dang dở. Commit/push công việc ở repo con trước, rồi mới cập nhật root pointer.
+Sau khi sửa một vài repo, dùng `--repo <path>` để **chỉ fetch và commit pointer của những repo đó**; có thể lặp flag. Không fetch/check trạng thái checkout hoặc stage gitlink của repo không được chọn, nên giữ nguyên cả công việc dở ở những repo đó. Bỏ `--repo` để đồng bộ toàn bộ như trước; cron/manual GitHub Actions vẫn dùng chế độ toàn bộ.
+
+Script chỉ fast-forward checkout sạch tới `origin/main`; không commit nội dung repo con, không stash/reset/clean hoặc push hộ. Dừng nếu repo được chọn có uncommitted work, branch khác, commit chưa push/divergence hay operation Git dang dở. Kiểm tra mọi checkout được chọn trước khi fetch và chỉ cập nhật working tree sau khi tất cả fetch/đối chiếu thành công. Commit/push công việc ở repo con trước, rồi mới cập nhật root pointer.
 
 ```bash
 python3 scripts/sync-repos.py --check   # fetch và kiểm tra; exit 1 nếu có checkout cũ
 python3 scripts/sync-repos.py           # fast-forward, chưa commit root
 python3 scripts/sync-repos.py --commit  # fast-forward và commit pointer; chưa push
+# Chỉ hai repo vừa sửa, tối đa 15 giây cho mỗi fetch:
+python3 scripts/sync-repos.py --repo redis-learn --repo interview-question --fetch-timeout 15 --commit
 python3 -m unittest discover -s tests -v
 ```
+
+Mỗi fetch có timeout mặc định **30 giây**, đổi bằng `--fetch-timeout <seconds>`. Script in ngay tên repo, thứ tự và thời gian fetch; không fetch submodule lồng bên trong. Fetch lỗi/timeout làm dừng ngay, không bỏ qua lỗi để commit pointer chưa xác minh. Trên Linux/macOS, timeout hoặc Ctrl+C dừng cả Git và transport/helper con; Ctrl+C trả exit code 130. Git không hỏi credentials tương tác: chuẩn bị authentication trước khi chạy. Timeout này chỉ áp dụng cho fetch trong script, không giới hạn lệnh `git push` chạy riêng.
 
 Nếu root push bị từ chối do có commit mới từ người khác, đồng bộ root bằng Git theo quy trình của nhóm, xử lý conflict rồi chạy script lại; không force-push. Chỉ đồng bộ source/pointers, không tự cài npm dependencies, build hay deploy mọi site. Repo con có thể có CI/deploy Git integration riêng khi nhận push.
 
