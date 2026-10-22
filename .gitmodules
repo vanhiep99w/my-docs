@@ -127,3 +127,7 @@
 	path = system-design-practice
 	url = https://github.com/vanhiep99w/system-design-practice.git
 	branch = main
+[submodule "example-learn"]
+	path = example-learn
+	url = https://github.com/vanhiep99w/example-learn.git
+	branch = main

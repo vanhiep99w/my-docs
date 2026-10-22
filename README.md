@@ -1,6 +1,6 @@
 # My Docs
 
-Tập hợp 24 repo tài liệu tiếng Việt, landing [`docs`](https://tbh-docs.pages.dev/) và component package `docs-kit`. Mỗi repo con là **Git submodule theo nhánh `main`**; root quản lý skill chung, Wiki và commit pointer của từng repo.
+Tập hợp 24 repo tài liệu tiếng Việt, landing [`docs`](https://tbh-docs.pages.dev/) và component package `docs-kit`. Repo `example-learn` chứa các app demo đa framework, build chung thành một Cloudflare Pages site để các bài docs nhúng qua iframe. Mỗi repo con là **Git submodule theo nhánh `main`**; root quản lý skill chung, Wiki và commit pointer của từng repo.
 
 ## Clone và đồng bộ
 
@@ -66,7 +66,9 @@ Nguồn policy là [`stack-versions.json`](stack-versions.json). Kiểm tra offl
 python3 scripts/check-stack.py
 ```
 
-Checker yêu cầu docs-kit ở 17 site đã tích hợp (danh sách `DOCS_KIT_SITES` trong checker); không tự thêm package vào site chưa dùng. Manifest khai báo `0.9.8` hoặc `^0.9.8`, lockfile phải resolve đúng `0.9.8`.
+Checker yêu cầu docs-kit ở 17 site đã tích hợp (danh sách `DOCS_KIT_SITES` trong checker); không tự thêm package vào site chưa dùng. Theo pin mặc định, manifest khai báo `0.9.8` hoặc `^0.9.8`, lockfile phải resolve đúng `0.9.8`.
+
+Ngoại lệ rollout có phạm vi rõ trong `stack-versions.json` → `siteOverrides`: hiện chỉ `micro-frontend-learn` dùng docs-kit **0.10.0** để có `LiveDemo`; các consumer khác giữ **0.9.8**. Checker vẫn bắt manifest/lockfile khớp chính xác version của từng site, từ chối override không hợp lệ hoặc repo/package không khai báo. Không dùng range để che giấu bản cũ. Khi rollout toàn bộ sau này, cập nhật pin chung và xóa ngoại lệ tương ứng.
 
 Checker không cài package hoặc tự sửa repo. Khi nâng tiếp: xác minh `npm view <package>@latest version peerDependencies engines`, cập nhật policy + manifests + lockfiles ở các repo có dependency đó, giữ nguyên biến thể UI (Radix hoặc alias `@fumadocs/base-ui`), rồi chạy focused checks/build từng repo. Không dùng canary/RC hay `--force`/`--legacy-peer-deps` để bỏ qua incompatibility. Commit/push con trước và sync root theo quy trình bên trên.
 
@@ -84,3 +86,9 @@ Không đặt lại skill chung trong từng repo con. Giữ các skill AWS còn
 ## Ranh giới commit
 
 Commit trong `my-docs` chỉ lưu root files và gitlink; code của mỗi doc phải commit/push tại repo của chính nó. Commit/push root không xuất bản thay đổi chưa push trong repo con. Dữ liệu Wiki kiểm kê là snapshot tại lần khảo sát, không tự tính lại khi workflow cập nhật submodule.
+
+## App demo dùng chung
+
+[`example-learn`](https://github.com/vanhiep99w/example-learn) là submodule theo `main`, không phải một site Fumadocs mới. Repo chứa demo tự build (hiện có React + Vue và JavaScript thuần), registry và output static gom vào `dist/`. Chạy kiểm tra/deploy theo `example-learn/README.md`.
+
+`LiveDemo` trong docs-kit chỉ nhúng URL và cung cấp nút tải/mở riêng/source; không chứa framework dependencies của các demo. Bài thử nghiệm: `micro-frontend-learn/content/docs/giao-tiep-va-trang-thai/index.mdx`. Cloudflare Pages do chủ repo kết nối/deploy; source push không chứng minh URL demo đã online. Repo example-learn dùng stack riêng cho labs, không áp publishing stack Next/Fumadocs vào các workspace ví dụ.

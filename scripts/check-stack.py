@@ -3,6 +3,7 @@
 
 import configparser
 import json
+import re
 from pathlib import Path
 import sys
 
@@ -59,10 +60,26 @@ def check_package(path: Path, versions: dict[str, str]) -> list[str]:
 
 
 def check_collection(root: Path) -> list[str]:
-    versions = json.loads((root / "stack-versions.json").read_text())
+    policy = json.loads((root / "stack-versions.json").read_text())
+    versions = {name: version for name, version in policy.items() if name != "siteOverrides"}
+    overrides = policy.get("siteOverrides", {})
+    if not isinstance(overrides, dict):
+        return ["siteOverrides must be an object"]
     modules = configparser.ConfigParser()
     modules.read(root / ".gitmodules")
     errors = []
+    paths = {modules[section]["path"] for section in modules.sections()}
+    for site, packages in overrides.items():
+        if site not in paths:
+            errors.append(f"Unknown site override: {site}")
+        if not isinstance(packages, dict) or not packages:
+            errors.append(f"{site}: override must be a nonempty package/version object")
+            continue
+        for name, version in packages.items():
+            if name not in versions or not isinstance(version, str) or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", version):
+                errors.append(f"{site}: invalid exact-version override for {name}")
+    if errors:
+        return errors
     for section in modules.sections():
         relative = modules[section]["path"]
         path = root / relative
@@ -72,7 +89,7 @@ def check_collection(root: Path) -> list[str]:
         if not (path / ".git").exists():
             errors.append(f"{relative}: initialize submodules before checking")
         elif (path / "package.json").exists():
-            errors.extend(check_package(path, versions))
+            errors.extend(check_package(path, {**versions, **overrides.get(relative, {})}))
     return errors
 
 
