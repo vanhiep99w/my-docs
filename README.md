@@ -74,6 +74,18 @@ Checker không cài package hoặc tự sửa repo. Khi nâng tiếp: xác minh 
 
 `docs/` là HTML tĩnh nên không có stack npm. `docs-kit/` chỉ đồng bộ React/type packages trong devDependencies; giữ nguyên peer range cho consumers, không thêm Next/Fumadocs vào thư viện. Các app ví dụ/lab lồng trong site không thuộc publishing stack này.
 
+## Kiểm tra D2 request flow
+
+Đợt áp dụng flow cho 14 repo được ghi trong [D2-FLOW-ROLLOUT.md](D2-FLOW-ROLLOUT.md), gồm phạm vi nguồn/generated, các diagram giữ nguyên và giới hạn kiểm thử.
+
+```bash
+# Chạy preparation hooks trước với các site sinh content/docs từ Markdown gốc.
+node scripts/check-d2-flows.mjs
+node scripts/check-d2-flows.mjs --repo redis-learn --repo system-design-practice
+```
+
+Checker dùng dependencies và production remark plugins của từng host, không cần npm workspace ở root; kiểm tra compile, mapping hai theme và toàn bộ transcript no-JS. Không thay thế build/browser checks và không deploy.
+
 ## Skill và Wiki
 
 - `.agents/skills/fumadocs-project-init/SKILL.md`: khởi tạo site và curriculum.
