@@ -6,12 +6,14 @@ Use this guide after selecting a feature in the skill's decision table. Read onl
 
 - [Integration contract](#integration-contract)
 - [D2 diagrams and progressive views](#d2-diagrams-and-progressive-views)
+  - [Request-flow playback](#request-flow-playback)
   - [Icons from the D2 catalog](#icons-from-the-d2-catalog)
 - [Code walkthrough versus diff](#code-walkthrough-versus-diff)
 - [Terminal sessions](#terminal-sessions)
 - [HTTP protocol exchanges](#http-protocol-exchanges)
 - [Latency waterfalls](#latency-waterfalls)
 - [Source Explorer and adapters](#source-explorer-and-adapters)
+- [Executable apps: Example Explorer and LiveDemo](#executable-apps-example-explorer-and-livedemo)
 - [Validation and publication](#validation-and-publication)
 
 ## Integration contract
@@ -20,12 +22,14 @@ Keep these three layers aligned; preserve existing collections, plugins, registr
 
 | Fence / feature | Build import from `@vanhiep99w/docs-kit/…` | Component import subpath | CSS subpath |
 | --- | --- | --- | --- |
-| `d2` | `d2`: `remarkD2` | `components/d2`: `D2Diagram`; `components/d2-interactive`: `D2InteractiveDiagram` for opt-in modes | `styles/d2.css` |
+| `d2` | `d2`: `remarkD2` | `components/d2`: `D2Diagram`; `components/d2-interactive`: `D2InteractiveDiagram` for the current default viewer and progressive modes | `styles/d2.css` |
 | `code-walkthrough` | `code-walkthrough`: `remarkCodeWalkthrough` | `components/code-walkthrough`: `CodeWalkthrough` | `styles/code-walkthrough.css` |
 | `code-diff` | `code-diff`: `remarkCodeDiff` | `components/code-diff`: `CodeDiff` | `styles/code-diff.css` |
 | `terminal-session` | `terminal-session`: `remarkTerminalSession` | `components/terminal-session`: `TerminalSession` | `styles/terminal-session.css` |
 | `protocol-exchange` | `protocol-exchange`: `remarkProtocolExchange` | `components/protocol-exchange`: `ProtocolExchange` | `styles/protocol-exchange.css` |
 | `span-waterfall` | `span-waterfall`: `remarkSpanWaterfall` | `components/span-waterfall`: `SpanWaterfall` | `styles/span-waterfall.css` |
+| Example Explorer / `ExampleRef` JSX | No remark plugin; `example-explorer` exposes registry types/validation helpers | `components/example-explorer`: `ExampleExplorerProvider`, `ExampleRef`, optional `useExampleExplorer` | `styles/example-explorer.css` |
+| `LiveDemo` JSX | No remark plugin or provider | `components/live-demo`: `LiveDemo` | `styles/live-demo.css` |
 | Source references | Host-owned asset generator; types/helpers in `source-explorer` | `components/source-explorer`: `SourceExplorerProvider`, `SourceRef`, optional `D2SourceLinks` | `styles/source-explorer.css`; optional `styles/source-explorer-fumadocs.css` |
 
 For one feature, wire only what is missing. Example for a code walkthrough:
@@ -44,13 +48,13 @@ import { CodeWalkthrough } from '@vanhiep99w/docs-kit/components/code-walkthroug
 @import '@vanhiep99w/docs-kit/styles/code-walkthrough.css';
 ```
 
-Build helpers/parsers must stay in Node/build code, not client components. Prefer descriptor fences over constructing prepared JSX props manually. A fence renders only if its plugin and resulting component registration exist; having the npm dependency alone is insufficient.
+Build helpers/parsers must stay in Node/build code, not client components. Prefer descriptor fences for the learning viewers instead of constructing prepared props manually; ExampleRef and LiveDemo are JSX features, not descriptor fences. A fence renders only if its plugin and resulting component registration exist; having the npm dependency alone is insufficient.
 
 Current exports do **not** include MarbleDiagram, ConcurrencyLanes, AnnotatedExample, DataInspector or StateTransitionExplorer. Do not revive those APIs or translate a task into a nonexistent component. Plain JSON, tables, ordinary code and truthful D2 views remain appropriate where no specialized current component fits.
 
 ## D2 diagrams and progressive views
 
-Use `d2` for architecture, dependencies, decision/control flow, entity relationships, message ordering and state transitions. Start with the static default: a caption, readable labels, a small number of meaningful nodes and arrows whose semantics the prose explains.
+Use `d2` for architecture, dependencies, decision/control flow, entity relationships, message ordering and state transitions. Start with one clear view: readable labels, a small number of meaningful nodes and arrows explained in prose. Current source defaults to the interactive viewer and scale `0.85`, not a server-only diagram. Register both D2 components; choose `interactive=false` explicitly for server-only output and check older host versions before assuming these defaults.
 
 ````mdx
 ```d2 title="Cache-aside request path"
@@ -68,13 +72,14 @@ api -> cache: Fill after read
 
 The picture is a logical flow, not a measured trace. Explain conditions, ordering and failures in surrounding prose; use SpanWaterfall only when timing is actually the teaching point.
 
-Choose opt-in behavior intentionally:
+Choose modes intentionally:
 
-- `interactive`: zoom/pan/fit/expand for a diagram that benefits from exploration; do not enable just because it is available.
+- The default viewer provides zoom/pan/fit/fullscreen and source controls. Distinguish this from opting into progressive boards, motion or an explicit server-only view.
 - `mode=steps`: successive **inherited** system states. Use CodeWalkthrough instead when the object being stepped through is source code.
 - `mode=tabs`: alternative scenarios, each inheriting the base independently, not the preceding scenario.
 - `mode=explorer`: layers/drill-down when one flat diagram would hide ownership or overload the reader.
-- `mode=animation`: only when changing state over time is informative; require accessible static views and respect reduced motion. Do not use animation to imply live execution.
+- `mode=animation`: use D2 board animation only when changing state over time is informative; retain accessible static views. Do not imply live execution.
+- `mode=flow`: use authored request traversal on one fixed topology; read [D2 flow](d2-flow.md) before writing its comment-YAML descriptor or enabling autoplay/loop.
 
 A minimal inherited-state example:
 
@@ -88,9 +93,13 @@ steps: {
 ```
 ````
 
-Non-static modes emit `D2InteractiveDiagram`; register it alongside `D2Diagram` and keep the shared D2 CSS. The compiler/WASM runs at build time, never in the browser. Defaults use ELK; layout resolution is fence `layout` > page `d2Layout` > plugin option > ELK. If using page overrides, the host schema must retain `d2Layout`. Local images/imports/fonts and asset roots are host build configuration, not arbitrary paths for document authors to guess.
+Current default fences and non-static modes emit `D2InteractiveDiagram`; register it alongside the server-only `D2Diagram` and keep the shared D2 CSS. The compiler/WASM runs at build time, never in the browser. Defaults use ELK; layout resolution is fence `layout` > page `d2Layout` > plugin option > ELK. If using page overrides, the host schema must retain `d2Layout`. Local images/imports/fonts and asset roots are host build configuration, not arbitrary paths for document authors to guess.
 
 Canonical details: `docs-kit/docs/d2.md`, `docs-kit/README.md`, `docs-kit/examples/d2/`. Do not hide a large unreadable graph by shrinking the font; split it or choose purposeful layers/scenarios.
+
+### Request-flow playback
+
+Use the existing `d2` integration, not a new component/fence. See [D2 flow authoring](d2-flow.md) for a complete hit/miss example, strict edge IDs, scenario exclusion, authored-vs-measured semantics, autoplay/loop, fullscreen continuity and validation. Verify installed `mode=flow` support; the local manifest does not establish a published minimum version. Keep full scenario explanations available without JavaScript.
 
 ### Icons from the D2 catalog
 
@@ -279,10 +288,14 @@ Optional `components/code-diff-source` and `components/code-walkthrough-source` 
 
 Canonical integration/data contract: Source Explorer sections of `docs-kit/README.md`; inspect the selected host's source generator and focused reference/navigation tests.
 
+## Executable apps: Example Explorer and LiveDemo
+
+Read [live examples](live-examples.md) for exact registry/provider/JSX integration, real version selection, lifecycle, URL history and iframe trust checks. Prefer Example Explorer for new lessons: ExampleRef opens a real app in a modal without narrowing the article. Retain LiveDemo for existing or deliberately inline embeds. Neither builds/deploys apps or needs a remark parser. Keep Source Explorer for code inspection and D2 flow for authored illustrative routes; do not confuse any of them with running the actual app.
+
 ## Validation and publication
 
 1. Check the installed feature's actual parser/export, MDX registry and CSS; use existing repository tests where present.
 2. Compile the touched docs/fences. Unknown YAML fields, duplicate IDs, invalid ranges or missing references should fail with file/fence context; do not suppress failures by turning descriptors into raw code.
 3. Verify prose plus component still make sense with no JavaScript. Inspect dark/light and narrow layouts; preserve readable font size and intentional horizontal scrolling.
-4. Check copy targets, disclosure, step selection, source/deep links and keyboard controls for the chosen features. All folded/unselected data remains public.
+4. Check copy targets, disclosure, step selection, source/deep links and keyboard controls. For D2 flow, verify scenario switches/fullscreen preserve intended playback and exclusion; for executable examples, check actual app/version URLs, iframe reset and blocked-frame recovery. All folded/unselected authored data remains public.
 5. Report what was actually run versus hypothetical or blocked. Rendering does not prove commands, HTTP semantics, code correctness or performance claims.

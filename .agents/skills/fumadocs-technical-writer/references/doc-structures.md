@@ -7,13 +7,13 @@ Use these as starting shapes, not a section quota. Match the host's frontmatter/
 1. **Problem and context:** user-visible pain, scope and evidence.
 2. **Goals and non-goals:** invariants and deliberately excluded work.
 3. **System overview:** D2 diagram for boundaries, ownership and integrations.
-4. **Representative flow:** D2 request/decision or sequence view; explain inputs, state owners, persistence, consumers and failure paths.
+4. **Representative flow:** D2 request/decision or sequence view; use `mode=flow` for authored request traversal when the installed host supports it. Explain inputs, state owners, persistence, consumers and failure paths.
 5. **Implementation:** CodeWalkthrough for the decisive source/config lines; SourceRef for full files where the host can resolve them.
 6. **Alternatives and trade-offs:** prose/table, with reasons for the selected approach.
 7. **Failure and recovery:** D2 branches or inherited state steps when they clarify behavior; use a table when a graph would add no value.
 8. **Validation and open questions:** actual tests, measured versus hypothetical results, unresolved assumptions.
 
-Use D2 `steps` for evolving system state, `tabs` for independent alternatives and `explorer` for meaningful drill-down. Do not add SpanWaterfall merely because the architecture is distributed; require timing data or explicitly illustrative durations relevant to the explanation.
+Use D2 `steps` for evolving system state, `tabs` for independent board alternatives, `explorer` for drill-down and `flow` for a request moving through one fixed topology. Use ExampleRef separately only when a real hosted app answers a different question. Do not add SpanWaterfall merely because the architecture is distributed; require timing data or explicitly illustrative durations relevant to the explanation.
 
 ## API reference
 
@@ -43,7 +43,7 @@ Do not imply a displayed exit code, transcript or request was executed. Label sy
 1. **Outcome and prerequisites:** what the reader will achieve and the supported environment.
 2. **Orientation:** a small D2 flow or Fumadocs Files/path list only when readers need a mental map.
 3. **Setup:** registered Steps/Tabs for procedures/variants; TerminalSession when context or expected output helps.
-4. **Implementation:** CodeWalkthrough for non-obvious code and SourceRef for a real complete example.
+4. **Implementation:** CodeWalkthrough for non-obvious code and SourceRef for full files; add ExampleRef when readers need to try a real app/behavior variant, with a verified host registry and deployed URL.
 5. **Verify:** concrete success checks, expected behavior and likely failure recovery.
 6. **Next steps:** existing related pages, not invented links or a repetitive summary.
 

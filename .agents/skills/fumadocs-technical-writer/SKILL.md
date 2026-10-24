@@ -1,6 +1,6 @@
 ---
 name: fumadocs-technical-writer
-description: Write, revise or restructure Vietnamese or English technical documentation for Fumadocs sites using docs-kit components. Use for architecture/design docs, API references, runbooks, tutorials and MD/MDX lessons; choose D2 diagrams, CodeWalkthrough, CodeDiff, TerminalSession, ProtocolExchange, SpanWaterfall and Source Explorer according to the reader's question. Also use when replacing legacy Mermaid or ASCII diagrams with docs-kit. Do not use for marketing copy or Word/PDF/PPTX deliverables.
+description: Write, revise or restructure Vietnamese or English technical documentation for Fumadocs sites using docs-kit components. Use for architecture/design docs, API references, runbooks, tutorials and MD/MDX lessons; choose D2 diagrams/request-flow playback, CodeWalkthrough, CodeDiff, TerminalSession, ProtocolExchange, SpanWaterfall, Source Explorer, Example Explorer (ExampleRef) and LiveDemo according to the reader's question. Also use when replacing legacy Mermaid or ASCII diagrams with docs-kit. Do not use for marketing copy or Word/PDF/PPTX deliverables.
 ---
 
 # Fumadocs Technical Writer
@@ -13,13 +13,13 @@ Use this single skill from the collection root's `.agents/skills/`; do not recre
 
 Read applicable rules, adjacent lessons, metadata, `package.json`/lockfile, preparation hooks, `source.config.*`, the actual MDX registry and global styles. Follow the host's authoring source and conventions: some sites generate `content/docs` from root Markdown, others author there directly; frontmatter, H1 and manual TOC handling differ. Use `../../../wiki/content-pipeline.md` as an authority map, then verify source when necessary.
 
-Inspect `../../../docs-kit/package.json`, its README and the host's **installed** package exports/version before using a component. Local source or a manifest range does not prove that API is installed or published. The checked-in README currently describes 0.9.0 as a release candidate; do not blindly prescribe that registry version. Do not upgrade every repository as part of a writing task.
+Inspect `../../../docs-kit/package.json`, its README and the host's **installed** package exports/version before using a component. Local source or a manifest range does not prove that API is installed or published; a new D2 mode may exist locally before consumers receive it. Check actual capabilities instead of prescribing a stale version or inventing a minimum release. Do not upgrade every repository as part of a writing task.
 
 ## Workflow
 
 1. **Locate the canonical source and doc type.** Identify the reader's problem, prerequisites and desired outcome. Read only the relevant template in `references/doc-structures.md`.
 2. **Plan explanations and visuals together.** For each visual, name the question it answers and select from the decision table below. Use matching icons from https://icons.d2lang.com/ whenever they accurately identify a depicted technology/service and make the diagram easier to understand. Introduce the visual in prose, then explain the decisive behavior afterward.
-3. **Verify integration before authoring.** A docs-kit fence needs its remark plugin, emitted component in the host MDX map and corresponding CSS. Source Explorer additionally needs provider, manifest/assets and build-time reference validation. Read the needed section of `references/docs-kit-components.md`; do not guess schemas or imports.
+3. **Verify integration before authoring.** Read the selected section of [docs-kit components](references/docs-kit-components.md). Fences need their remark plugin, emitted MDX component and CSS; Source Explorer also needs provider/generated assets/reference checks. For request playback, read [D2 flow](references/d2-flow.md). For real apps, read [live examples](references/live-examples.md): Example Explorer needs a host registry/provider, ExampleRef and CSS, while LiveDemo needs JSX registration/CSS only. Neither iframe feature needs a remark plugin. Do not guess schemas, imports or deployment URLs.
 4. **Write the actual file.** Match `.md`/`.mdx` and the host's frontmatter/heading conventions; preserve page identity, links and `meta.json` ordering. Keep technical names/code accurate and follow the voice/readability rules below.
 5. **Validate the selected features.** Run focused descriptor/MDX checks, the host's build when permitted, and inspect export/browser behavior relevant to the change. Check light/dark, narrow screens, no-JavaScript readability and copy/source links where applicable. Report checks actually run and remaining limitations; never deploy merely to validate prose.
 
@@ -30,16 +30,19 @@ If docs-kit or the selected feature is missing, identify the minimum dependency/
 | Reader needs to understand | Use | Avoid |
 | --- | --- | --- |
 | Components, ownership, dependencies, request flow, decisions or state transitions | D2 through `remarkD2`; static `D2Diagram` for a small view | Mermaid/ASCII diagrams, or inventing a state-machine viewer API |
-| A large diagram, an evolving system state, alternative scenarios or drill-down | `D2InteractiveDiagram`: opt-in `interactive`, `mode=steps`, `mode=tabs`, `mode=explorer`; animation only when motion teaches something | Interactive controls on every tiny graph; treating inherited steps and independent scenarios as equivalent |
+| A large diagram, evolving system state, alternative scenarios or drill-down | `D2InteractiveDiagram`: current D2 fences use the viewer by default; choose `mode=steps`, `tabs` or `explorer` intentionally, `interactive=false` for server-only | Assuming old static defaults; treating inherited steps and independent scenarios as equivalent |
+| A request traversing a fixed topology under different authored scenarios | D2 `mode=flow`, with leading comment-YAML scenarios and exact edge IDs; see `references/d2-flow.md` | A separate RequestFlow API, inferring runtime branches, or presenting playback speed as measured latency |
 | Why particular lines of code/config matter, one step at a time | `CodeWalkthrough` / `code-walkthrough` with snapshots and ordered steps | A walkthrough for a single self-explanatory snippet; confusing code snapshots with runtime state |
 | What changed between two versions and which side/lines changed | `CodeDiff` / `code-diff` | Manually drawing +/− tables; using a diff to teach a many-step control flow |
 | Which command to run in which environment, expected stdout/stderr, warnings and exit code | `TerminalSession` / `terminal-session` | A terminal-shaped architecture diagram; claiming displayed output was executed |
 | HTTP request/response method, status, ordered headers, bodies and error variants | `ProtocolExchange` / `protocol-exchange` | A generic sequence diagram instead of the actual HTTP messages; assuming the viewer sends requests |
 | Durations, overlap, service spans and parent/child timing | `SpanWaterfall` / `span-waterfall`, with explicit illustrative/measured provenance | Fabricated measurements, automatic critical-path claims or using spans as generic state/concurrency lanes |
 | Full related files, snapshots, regions or cross-file implementation behind a snippet/diagram | `SourceRef` + `SourceExplorerProvider`; optional Diff/Walkthrough adapters and D2 source links | Copying an entire project inline, or assuming the package generates the host manifest |
+| Trying a real app, comparing deployed behavior variants or returning to examples without shrinking the article | `ExampleRef` + `ExampleExplorerProvider` and host-owned registry; prefer this modal for new lessons | Treating Source Explorer as an app runner, fabricated versions, or arbitrary iframe URLs from query parameters |
+| An existing inline app viewport, or an explicit inline-embed requirement | `LiveDemo` with verified `src`/`title`; retain compatibility rather than migrating unrelated embeds | Adding a remark fence, implying the component builds/hosts the app, or promising an untrusted-code sandbox |
 | A short snippet, raw log/output, standalone JSON, a directory listing, schema/options or a comparison | Normal code/text fences, a Markdown table, or registered Fumadocs `Files`/`TypeTable` | Forcing everything into docs-kit; recreating removed DataInspector/MarbleDiagram/ConcurrencyLanes APIs |
 
-Use two components only for different questions: D2 for the service interaction and ProtocolExchange for its HTTP details; CodeDiff for the change and TerminalSession for verifying it; D2 for the logical flow and SpanWaterfall for a genuinely timed trace. Do not repeat the same explanation in multiple viewers.
+Use two components only for different questions: D2 for the service interaction and ProtocolExchange for its HTTP details; CodeDiff for the change and TerminalSession for verifying it; D2 for the logical flow and SpanWaterfall for a genuinely timed trace; ExampleRef for trying behavior and SourceRef for reading its real implementation. Do not repeat the same explanation in multiple viewers.
 
 For RxJS timing/lifecycle lessons, use truthful D2 flow/step views for subscription and cancellation relationships, plus a frame/event table and executable `TestScheduler` examples when exact timing matters. Do not fabricate a docs-kit marble renderer, draw hand-aligned marble diagrams or pretend a latency waterfall reproduces operator semantics.
 
@@ -58,7 +61,7 @@ For RxJS timing/lifecycle lessons, use truthful D2 flow/step views for subscript
 - YAML descriptors have strict schemas: unique IDs, valid references and 1-based inclusive ranges in the correct snapshot/side. Preserve code/newline semantics with deliberate `|-`/`|` usage. Do not hand-author prepared tokens, SVG props, diff rows or lossless-JSON offsets when the build plugin can create them.
 - Keep ProtocolExchange JSON bodies and SpanWaterfall attributes as strict JSON **strings**. Preserve numeric lexemes; do not round-trip through JavaScript Number. Standalone payloads can remain `json` fences.
 - Treat every example as published data, including folded output, unselected snapshots and closed variants. Remove credentials/private data; use explicit demo values. D2 SVG and Source Explorer HTML are trusted build outputs, not input sanitizers.
-- State what was measured versus hypothetical. Components do not execute commands/code, make HTTP requests, fetch tracing backends, prove causality or validate a benchmark. Validate examples separately before claiming real results.
+- State what was measured versus hypothetical. Descriptor viewers and D2 flow do not execute commands/code, make real requests, fetch traces or prove performance. Example Explorer/LiveDemo instead load an independently hosted app in an iframe when opened/started; validate that app separately and do not promise successful loading, malicious-code isolation or parent keyboard/theme control.
 
 ## Multi-part technical series
 
