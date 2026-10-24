@@ -8,6 +8,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { assertFlowTopology } from './d2-flow-policy.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -60,6 +61,7 @@ if (worker) {
     const tree = processor.parse(value);
     const expected = collect(tree, node => node.type === 'code' && node.lang === 'd2' && /\bmode=flow\b/.test(node.meta ?? ''));
     if (!expected.length) continue;
+    for (const node of expected) assertFlowTopology(node.value, `${file}:${node.position.start.line}`);
     // Preserve page frontmatter/layout, but do not recompile unrelated learning examples.
     tree.children = [...tree.children.filter(node => node.type === 'yaml'), ...expected];
     const output = await processor.run(tree, { path: file, value });
@@ -86,7 +88,7 @@ if (worker) {
     }
     pages++;
   }
-  assert.ok(diagrams > 0, `${args[1]}: no flow fences; prepare generated content first`);
+  // Zero flows is valid: this host may contain only ordinary sequence diagrams.
   console.log(JSON.stringify({ repo: args[1], pages, diagrams, scenarios, steps }));
 } else {
   const requested = [];

@@ -76,15 +76,16 @@ Checker không cài package hoặc tự sửa repo. Khi nâng tiếp: xác minh 
 
 ## Kiểm tra D2 request flow
 
-Đợt áp dụng flow cho 14 repo được ghi trong [D2-FLOW-ROLLOUT.md](D2-FLOW-ROLLOUT.md), gồm phạm vi nguồn/generated, các diagram giữ nguyên và giới hạn kiểm thử.
+Phạm vi và điều chỉnh được ghi trong [D2-FLOW-ROLLOUT.md](D2-FLOW-ROLLOUT.md). **Sequence/lifeline dùng viewer D2 thông thường, không dùng flow playback.** Hiện chỉ giữ flow cho các topology phù hợp ở 4 repo; checker vẫn rà 14 host để ngăn sequence flow quay lại.
 
 ```bash
 # Chạy preparation hooks trước với các site sinh content/docs từ Markdown gốc.
+node --test tests/d2-flow-policy.test.mjs
 node scripts/check-d2-flows.mjs
 node scripts/check-d2-flows.mjs --repo redis-learn --repo system-design-practice
 ```
 
-Checker dùng dependencies và production remark plugins của từng host, không cần npm workspace ở root; kiểm tra compile, mapping hai theme và toàn bộ transcript no-JS. Không thay thế build/browser checks và không deploy.
+Checker dùng dependencies và production remark plugins của từng host, không cần npm workspace ở root; reject sequence/lifeline có `mode=flow`, kiểm tra compile, mapping hai theme và toàn bộ transcript no-JS. Repo không có flow là hợp lệ. Không thay thế build/browser checks và không deploy.
 
 ## Skill và Wiki
 
