@@ -53,7 +53,7 @@ Các site Next.js dùng cùng bản **stable**, pin chính xác trong `package.j
 
 | Package | Version |
 |---|---|
-| Next.js / eslint-config-next (nếu có) | `16.4.2` |
+| Next.js / eslint-config-next (nếu có) | `16.4.6` |
 | React / React DOM | `19.3.1` |
 | Fumadocs core / UI / base-ui | `16.17.5` |
 | Fumadocs MDX | `15.4.7` |
